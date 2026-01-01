@@ -1,56 +1,51 @@
+# 💼 Wesley Gabriel - Portfólio
 
-# DevFolio - Portfólio Futurista Next.js
+Olá! Sou **Wesley Gabriel**, desenvolvedor Full Stack focado em automações, integrações e desenvolvimento web moderno.
 
-Um site de portfólio moderno, responsivo e animado construído com a mais refente stack tecnológica.
+## 🚀 Sobre Mim
 
-## 🚀 Stack
+Atuo com desenvolvimento web e automações, com foco em **n8n**, integração de APIs e bancos de dados. Minha experiência abrange desde o front-end até o back-end, criando soluções completas e eficientes.
 
-- **Framework:** Next.js 14+ (App Router)
-- **Linguagem:** TypeScript
-- **Estilização:** Tailwind CSS v4
-- **Animações:** Framer Motion
-- **Ícones:** Lucide React
+## 🛠️ Tech Stack
 
-## 🛠️ Como Rodar
+### Linguagens & Frameworks
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 
-1. **Instale as dependências:**
-   ```bash
-   npm install
-   ```
-   *Nota: Se encontrar erros de permissão com npm/npx, tente rodar o terminal como administrador ou usar `cmd /c` antes dos comandos.*
+### Front-end
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-2. **Inicie o servidor de desenvolvimento:**
-   ```bash
-   npm run dev
-   ```
+### Back-end & Automação
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![n8n](https://img.shields.io/badge/n8n-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 
-3. **Acesse:** `http://localhost:3000`
+### Banco de Dados
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
-## 📝 Customização
+### DevOps & Cloud
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-### Projetos
-Edite o arquivo `src/data/projects.ts`. Aqui você pode adicionar, remover ou editar seus projetos.
-Cada projeto tem:
-- `id`: Identificador único
-- `title`: Título do projeto
-- `description`: Descrição curta
-- `tags`: Categorias para filtro (ex: "Automacao", "Web")
-- `stack`: Tecnologias usadas
-- `githubUrl`/`liveUrl`: Links opcionais
+## 💡 O Que Eu Faço
 
-### Contato e Textos
-- **Textos Gerais:** Edite diretamente em `src/components/Hero.tsx`, `src/components/About.tsx`, etc.
-- **Email de Contato:** O formulário usa `mailto`. Para configurar, edite `src/components/Contact.tsx` e troque o email na função `handleSubmit`.
+- 🤖 **Automação de Processos** com n8n e integrações de APIs
+- 💬 **Chatbots Inteligentes** para WhatsApp e outras plataformas
+- 🌐 **Desenvolvimento Web Full Stack** com React, Next.js e Node.js
+- 🔗 **Integração de APIs** e sistemas complexos
+- 📊 **Dashboards e Sistemas de Gestão**
 
-### Cores e Tema
-As cores principais estão definidas em `src/app/globals.css`:
-- `--background`: Cor de fundo (#0B0F14)
-- `--accent`: Cor de destaque (#1E4DFF - Azul Royal)
+## 📫 Contato
 
-## 📦 Deploy
+Entre em contato para discutirmos seu próximo projeto!
 
-Este projeto está pronto para deploy na Vercel (recomendado).
+---
 
-1. Suba o código para o GitHub.
-2. Importe o projeto na Vercel.
-3. Clique em Deploy.
+⭐ **Este portfólio foi construído com Next.js, TypeScript, Tailwind CSS e Framer Motion**
