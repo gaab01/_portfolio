@@ -94,7 +94,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
         }, [isScrolling, isDragging, autoRotateSpeed]);
 
         const lastMouseY = useRef(0);
-        const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+        const dragStartRef = useRef<{ x: number; y: number } | null>(null);
 
         // ... existing code ...
 
@@ -105,9 +105,8 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
             lastMouseX.current = clientX;
             lastMouseY.current = clientY;
 
-            if ('touches' in e) {
-                touchStartRef.current = { x: clientX, y: clientY };
-            }
+            // Store start position for both mouse and touch
+            dragStartRef.current = { x: clientX, y: clientY };
         };
 
         const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
@@ -115,15 +114,22 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
             const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
             const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
-            // On mobile, check if the user is scrolling vertically
-            if ('touches' in e && touchStartRef.current) {
-                const deltaX = Math.abs(clientX - touchStartRef.current.x);
-                const deltaY = Math.abs(clientY - touchStartRef.current.y);
+            // Check if dragging vertically (mobile scroll or desktop vertical drag)
+            if (dragStartRef.current) {
+                const deltaX = Math.abs(clientX - dragStartRef.current.x);
+                const deltaY = Math.abs(clientY - dragStartRef.current.y);
 
-                // If vertical movement is significant and greater than horizontal, assume scrolling
+                // If vertical movement is significant and greater than horizontal
                 if (deltaY > 10 && deltaY > deltaX) {
-                    setIsDragging(false); // Stop rotating
-                    return;
+                    if ('touches' in e) {
+                        setIsDragging(false); // Stop rotating, let browser scroll
+                        return;
+                    } else {
+                        // Desktop: just update lastMouseX so we don't jump when horizontal drag resumes,
+                        // but DO NOT update rotation.
+                        lastMouseX.current = clientX;
+                        return;
+                    }
                 }
             }
 
@@ -135,7 +141,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
 
         const handleMouseUp = () => {
             setIsDragging(false);
-            touchStartRef.current = null;
+            dragStartRef.current = null;
         };
 
         const anglePerItem = 360 / items.length;

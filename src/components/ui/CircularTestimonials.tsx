@@ -71,6 +71,29 @@ export const CircularTestimonials = ({
 
     const imageContainerRef = useRef<HTMLDivElement>(null);
     const autoplayIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const dragStart = useRef<number | null>(null);
+
+    const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        dragStart.current = clientX;
+    };
+
+    const handleDragEnd = (e: React.MouseEvent | React.TouchEvent) => {
+        if (dragStart.current === null) return;
+
+        const clientX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
+        const diff = dragStart.current - clientX;
+
+        // Threshold for swipe
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                handleNext();
+            } else {
+                handlePrev();
+            }
+        }
+        dragStart.current = null;
+    };
 
     const testimonialsLength = useMemo(() => testimonials.length, [testimonials]);
     const activeTestimonial = useMemo(
@@ -177,21 +200,16 @@ export const CircularTestimonials = ({
         <div className="testimonial-container">
             <div className="testimonial-grid">
                 {/* Images */}
-                <motion.div
+                <div
                     className="image-container"
                     ref={imageContainerRef}
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    onDragEnd={(e, { offset, velocity }) => {
-                        const swipe = Math.abs(offset.x) * velocity.x;
-
-                        if (swipe < -10000 || offset.x < -100) {
-                            handleNext();
-                        } else if (swipe > 10000 || offset.x > 100) {
-                            handlePrev();
-                        }
+                    onMouseDown={handleDragStart}
+                    onTouchStart={handleDragStart}
+                    onMouseUp={handleDragEnd}
+                    onTouchEnd={handleDragEnd}
+                    onMouseLeave={() => {
+                        if (dragStart.current !== null) dragStart.current = null;
                     }}
-                    style={{ touchAction: "pan-y" }}
                 >
                     {testimonials.map((testimonial, index) => (
                         <img
@@ -204,7 +222,7 @@ export const CircularTestimonials = ({
                             draggable="false"
                         />
                     ))}
-                </motion.div>
+                </div>
                 {/* Content */}
                 <div className="testimonial-content">
                     <AnimatePresence mode="wait">
