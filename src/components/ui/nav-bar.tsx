@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { Home, User, FolderGit2, Mail, Zap, Code2, Briefcase } from "lucide-react"
+import { Home, User, FolderGit2, Mail, Zap, Code2, Briefcase, LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { CircleMenu } from "@/components/ui/circle-menu"
 
