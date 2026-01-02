@@ -47,10 +47,11 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
             return () => window.removeEventListener('resize', checkMobile);
         }, []);
 
-        // Effect to handle scroll-based rotation
+        // Effect to handle scroll-based rotation (REMOVED based on user feedback)
+        /*
         useEffect(() => {
             const handleScroll = () => {
-                if (isDragging) return; // Don't update from scroll if dragging
+                if (isDragging) return;
                 setIsScrolling(true);
                 if (scrollTimeoutRef.current) {
                     clearTimeout(scrollTimeoutRef.current);
@@ -74,6 +75,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                 }
             };
         }, [isDragging]);
+        */
 
         // Effect for auto-rotation when not scrolling
         useEffect(() => {
