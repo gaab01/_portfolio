@@ -1,15 +1,14 @@
-
+```
 'use client';
 
 import { NavBar } from '@/components/ui/nav-bar';
-import { Home, User, FolderGit2, Zap, Mail, Code2 } from 'lucide-react';
+import { Home, User, Briefcase, Mail, Code2 } from 'lucide-react';
 
 export function Navbar() {
     const navItems = [
         { name: 'Início', url: '#hero', icon: Home },
         { name: 'Sobre', url: '#about', icon: User },
-        { name: 'Projetos', url: '#projects', icon: FolderGit2 },
-        { name: 'Serviços', url: '#services', icon: Zap },
+        { name: 'Projetos', url: '#projects', icon: Briefcase },
         { name: 'Contato', url: '#contact', icon: Mail },
     ];
 
@@ -28,3 +27,4 @@ export function Navbar() {
         </>
     );
 }
+```
