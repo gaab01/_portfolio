@@ -38,8 +38,8 @@ interface CircularTestimonialsProps {
 function calculateGap(width: number) {
     const minWidth = 1024;
     const maxWidth = 1456;
-    const minGap = 60;
-    const maxGap = 86;
+    const minGap = 80; // Increased from 60
+    const maxGap = 120; // Increased from 86
     if (width <= minWidth) return minGap;
     if (width >= maxWidth)
         return Math.max(minGap, maxGap + 0.06018 * (width - maxWidth));

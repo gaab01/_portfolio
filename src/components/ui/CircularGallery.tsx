@@ -11,6 +11,7 @@ const cn = (...classes: (string | undefined | null | false)[]) => {
 export interface GalleryItem {
     common: string;
     binomial: string;
+    videoUrl?: string;
     photo: {
         url: string;
         text: string;
@@ -32,12 +33,24 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
     ({ items, className, radius = 600, autoRotateSpeed = 0.02, ...props }, ref) => {
         const [rotation, setRotation] = useState(0);
         const [isScrolling, setIsScrolling] = useState(false);
+        const [isDragging, setIsDragging] = useState(false);
+        const [isMobile, setIsMobile] = useState(false);
+        const lastMouseX = useRef(0);
         const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
         const animationFrameRef = useRef<number | null>(null);
+
+        // Responsive check
+        useEffect(() => {
+            const checkMobile = () => setIsMobile(window.innerWidth < 768);
+            checkMobile();
+            window.addEventListener('resize', checkMobile);
+            return () => window.removeEventListener('resize', checkMobile);
+        }, []);
 
         // Effect to handle scroll-based rotation
         useEffect(() => {
             const handleScroll = () => {
+                if (isDragging) return; // Don't update from scroll if dragging
                 setIsScrolling(true);
                 if (scrollTimeoutRef.current) {
                     clearTimeout(scrollTimeoutRef.current);
@@ -60,12 +73,12 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                     clearTimeout(scrollTimeoutRef.current);
                 }
             };
-        }, []);
+        }, [isDragging]);
 
         // Effect for auto-rotation when not scrolling
         useEffect(() => {
             const autoRotate = () => {
-                if (!isScrolling) {
+                if (!isScrolling && !isDragging) {
                     setRotation(prev => prev + autoRotateSpeed);
                 }
                 animationFrameRef.current = requestAnimationFrame(autoRotate);
@@ -78,7 +91,25 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                     cancelAnimationFrame(animationFrameRef.current);
                 }
             };
-        }, [isScrolling, autoRotateSpeed]);
+        }, [isScrolling, isDragging, autoRotateSpeed]);
+
+        const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+            setIsDragging(true);
+            const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+            lastMouseX.current = clientX;
+        };
+
+        const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
+            if (!isDragging) return;
+            const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+            const delta = clientX - lastMouseX.current;
+            lastMouseX.current = clientX;
+            setRotation(prev => prev + delta * 0.5); // Adjust sensitivity here
+        };
+
+        const handleMouseUp = () => {
+            setIsDragging(false);
+        };
 
         const anglePerItem = 360 / items.length;
 
@@ -87,8 +118,15 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                 ref={ref}
                 role="region"
                 aria-label="Circular 3D Gallery"
-                className={cn("relative w-full h-full flex items-center justify-center", className)}
+                className={cn("relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing", className)}
                 style={{ perspective: '2000px' }}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onTouchStart={handleMouseDown}
+                onTouchMove={handleMouseMove}
+                onTouchEnd={handleMouseUp}
                 {...props}
             >
                 <div
@@ -103,31 +141,43 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                         const totalRotation = rotation % 360;
                         const relativeAngle = (itemAngle + totalRotation + 360) % 360;
                         const normalizedAngle = Math.abs(relativeAngle > 180 ? 360 - relativeAngle : relativeAngle);
-                        const opacity = Math.max(0.3, 1 - (normalizedAngle / 180));
+                        const opacity = Math.max(0.15, 1 - (normalizedAngle / 100)); // Sharper falloff
 
                         return (
                             <div
                                 key={item.photo.url}
                                 role="group"
                                 aria-label={item.common}
-                                className="absolute w-[300px] h-[400px]"
+                                className="absolute w-[240px] h-[320px] md:w-[300px] md:h-[400px] select-none pointer-events-none sm:pointer-events-auto"
                                 style={{
                                     transform: `rotateY(${itemAngle}deg) translateZ(${radius}px)`,
                                     left: '50%',
                                     top: '50%',
-                                    marginLeft: '-150px',
-                                    marginTop: '-200px',
+                                    marginLeft: isMobile ? '-120px' : '-150px',
+                                    marginTop: isMobile ? '-160px' : '-200px',
                                     opacity: opacity,
-                                    transition: 'opacity 0.3s linear'
+                                    transition: isDragging ? 'none' : 'opacity 0.3s linear'
                                 }}
                             >
                                 <div className="relative w-full h-full rounded-lg shadow-2xl overflow-hidden group border border-white/10 bg-black/70 backdrop-blur-lg">
-                                    <img
-                                        src={item.photo.url}
-                                        alt={item.photo.text}
-                                        className="absolute inset-0 w-full h-full object-cover"
-                                        style={{ objectPosition: item.photo.pos || 'center' }}
-                                    />
+                                    {item.videoUrl ? (
+                                        <video
+                                            src={item.videoUrl}
+                                            autoPlay
+                                            muted
+                                            loop
+                                            playsInline
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <img
+                                            src={item.photo.url}
+                                            alt={item.photo.text}
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                            style={{ objectPosition: item.photo.pos || 'center' }}
+                                            draggable={false}
+                                        />
+                                    )}
                                     <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
                                         <h2 className="text-xl font-bold">{item.common}</h2>
                                         <em className="text-sm italic opacity-80">{item.binomial}</em>

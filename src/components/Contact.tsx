@@ -1,36 +1,12 @@
-
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
 export function Contact() {
-    const [loading, setLoading] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
-
-    // Since we don't have a backend, we'll simulate a submission and use mailto for fallback
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setLoading(true);
-
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
-
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        setLoading(false);
-        setSubmitted(true);
-
-        // Fallback to mailto
-        window.location.href = `mailto:contato@seudominio.com?subject=Contato de ${data.name}&body=${data.message}`;
-    };
-
     return (
-        <section id="contact" className="py-20 relative overflow-hidden bg-background">
-            {/* Background Blurs - tornado mais sutil */}
+        <section id="contact" className="py-20 relative overflow-hidden bg-transparent">
+            {/* Background Blurs */}
             <div className="absolute top-1/2 right-0 w-1/4 h-1/2 bg-accent/3 blur-[150px] -z-10 rounded-full" />
 
             <div className="container mx-auto px-6">
@@ -49,7 +25,7 @@ export function Contact() {
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-center">
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -65,12 +41,12 @@ export function Contact() {
 
                             <div className="space-y-6">
                                 {[
-                                    { icon: Mail, text: "contato@devfolio.com", label: "Email" },
-                                    { icon: Phone, text: "+55 (11) 99999-9999", label: "WhatsApp" },
-                                    { icon: MapPin, text: "São Paulo, Brasil", label: "Localização" }
+                                    { icon: Mail, text: "sousawesley415@gmail.com", label: "Email" },
+                                    { icon: Phone, text: "(91) 99155-0538", label: "WhatsApp" },
+                                    { icon: MapPin, text: "Capitão Poço, Pará, Brasil", label: "Localização" }
                                 ].map((item, i) => (
-                                    <div key={i} className="flex items-center gap-4">
-                                        <div className="p-3 rounded-full bg-accent/10 text-accent">
+                                    <div key={i} className="flex items-center gap-4 group cursor-pointer hover:bg-white/5 p-4 -mx-4 rounded-xl transition-colors">
+                                        <div className="p-3 rounded-full bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
                                             <item.icon className="w-6 h-6" />
                                         </div>
                                         <div>
@@ -84,81 +60,64 @@ export function Contact() {
                     </motion.div>
 
                     <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
-                        className="glass p-8 rounded-3xl"
+                        className="aspect-square flex items-center justify-center p-8 relative"
                     >
-                        {submitted ? (
-                            <div className="h-full flex flex-col items-center justify-center text-center py-12">
-                                <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-4">
-                                    <Send className="w-8 h-8" />
-                                </div>
-                                <h3 className="text-2xl font-bold mb-2">Mensagem Confirmada!</h3>
-                                <p className="text-gray-400">Seu cliente de e-mail deve abrir em breve.</p>
-                                <button
-                                    onClick={() => setSubmitted(false)}
-                                    className="mt-6 text-accent hover:underline"
-                                >
-                                    Enviar outra mensagem
-                                </button>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Nome</label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        required
-                                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all"
-                                        placeholder="Seu nome"
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        required
-                                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all"
-                                        placeholder="seu@box.com"
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Mensagem</label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        rows={4}
-                                        required
-                                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all resize-none"
-                                        placeholder="Como posso te ajudar?"
-                                    ></textarea>
-                                </div>
+                        {/* Animated Abstract Tech Shape (Atom-like) */}
+                        <div className="relative w-64 h-64 flex items-center justify-center">
+                            {/* Core */}
+                            <motion.div
+                                className="absolute w-16 h-16 bg-accent rounded-full blur-md"
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.8, 1, 0.8] }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                            <div className="absolute w-12 h-12 bg-white rounded-full z-10 shadow-[0_0_30px_rgba(30,77,255,0.8)]" />
 
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full py-4 rounded-xl bg-accent text-white font-bold text-lg transition-all hover:shadow-[0_0_20px_rgba(30,77,255,0.4)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                >
-                                    {loading ? (
-                                        <>
-                                            <Loader2 className="w-5 h-5 animate-spin" />
-                                            Enviando...
-                                        </>
-                                    ) : (
-                                        <>
-                                            Enviar Mensagem
-                                            <Send className="w-5 h-5" />
-                                        </>
-                                    )}
-                                </button>
-                            </form>
-                        )}
+                            {/* Orbit 1 */}
+                            <motion.div
+                                className="absolute w-full h-16 border-2 border-accent/60 rounded-[100%] shadow-[0_0_15px_rgba(30,77,255,0.3)]"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                            />
+
+                            {/* Orbit 2 */}
+                            <motion.div
+                                className="absolute w-full h-16 border-2 border-purple-500/60 rounded-[100%] shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+                                style={{ rotate: 60 }}
+                                animate={{ rotate: 420 }} // 60 + 360
+                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                            />
+
+                            {/* Orbit 3 */}
+                            <motion.div
+                                className="absolute w-full h-16 border-2 border-cyan-400/60 rounded-[100%] shadow-[0_0_15px_rgba(34,211,238,0.3)]"
+                                style={{ rotate: -60 }}
+                                animate={{ rotate: 300 }} // -60 + 360
+                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                            />
+
+                            {/* Floating Particles */}
+                            {[...Array(5)].map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    className="absolute w-2 h-2 bg-white rounded-full"
+                                    initial={{ x: 0, y: 0, opacity: 0 }}
+                                    animate={{
+                                        x: (Math.random() - 0.5) * 200,
+                                        y: (Math.random() - 0.5) * 200,
+                                        opacity: [0, 1, 0]
+                                    }}
+                                    transition={{
+                                        duration: 2 + Math.random() * 2,
+                                        repeat: Infinity,
+                                        repeatDelay: Math.random()
+                                    }}
+                                />
+                            ))}
+                        </div>
                     </motion.div>
                 </div>
             </div>
