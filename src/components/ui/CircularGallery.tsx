@@ -93,22 +93,49 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
             };
         }, [isScrolling, isDragging, autoRotateSpeed]);
 
+        const lastMouseY = useRef(0);
+        const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+        // ... existing code ...
+
         const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
             setIsDragging(true);
             const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+            const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
             lastMouseX.current = clientX;
+            lastMouseY.current = clientY;
+
+            if ('touches' in e) {
+                touchStartRef.current = { x: clientX, y: clientY };
+            }
         };
 
         const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
             if (!isDragging) return;
             const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+            const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+            // On mobile, check if the user is scrolling vertically
+            if ('touches' in e && touchStartRef.current) {
+                const deltaX = Math.abs(clientX - touchStartRef.current.x);
+                const deltaY = Math.abs(clientY - touchStartRef.current.y);
+
+                // If vertical movement is significant and greater than horizontal, assume scrolling
+                if (deltaY > 10 && deltaY > deltaX) {
+                    setIsDragging(false); // Stop rotating
+                    return;
+                }
+            }
+
             const delta = clientX - lastMouseX.current;
             lastMouseX.current = clientX;
-            setRotation(prev => prev + delta * 0.5); // Adjust sensitivity here
+            // Only update rotation if we are still dragging (not scrolling)
+            setRotation(prev => prev + delta * 0.5);
         };
 
         const handleMouseUp = () => {
             setIsDragging(false);
+            touchStartRef.current = null;
         };
 
         const anglePerItem = 360 / items.length;
@@ -119,7 +146,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                 role="region"
                 aria-label="Circular 3D Gallery"
                 className={cn("relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing", className)}
-                style={{ perspective: '2000px' }}
+                style={{ perspective: '2000px', touchAction: 'pan-y' }}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}

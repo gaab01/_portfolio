@@ -177,7 +177,22 @@ export const CircularTestimonials = ({
         <div className="testimonial-container">
             <div className="testimonial-grid">
                 {/* Images */}
-                <div className="image-container" ref={imageContainerRef}>
+                <motion.div
+                    className="image-container"
+                    ref={imageContainerRef}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    onDragEnd={(e, { offset, velocity }) => {
+                        const swipe = Math.abs(offset.x) * velocity.x;
+
+                        if (swipe < -10000 || offset.x < -100) {
+                            handleNext();
+                        } else if (swipe > 10000 || offset.x > 100) {
+                            handlePrev();
+                        }
+                    }}
+                    style={{ touchAction: "pan-y" }}
+                >
                     {testimonials.map((testimonial, index) => (
                         <img
                             key={testimonial.src}
@@ -186,9 +201,10 @@ export const CircularTestimonials = ({
                             className="testimonial-image"
                             data-index={index}
                             style={getImageStyle(index)}
+                            draggable="false"
                         />
                     ))}
-                </div>
+                </motion.div>
                 {/* Content */}
                 <div className="testimonial-content">
                     <AnimatePresence mode="wait">
