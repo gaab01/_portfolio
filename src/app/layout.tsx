@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import dynamic from "next/dynamic";
 
-const Particles = dynamic(() => import("@/components/Particles"), { ssr: false });
+
+import ParticlesBackground from "@/components/ParticlesBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,22 +39,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0B0F14] text-white`}
       >
         {/* Particles Background - Fixed behind everything */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <Particles
-            className="absolute inset-0"
-            particleCount={300}
-            particleSpread={10}
-            speed={0.1}
-            particleColors={["#ffffff", "#1E4DFF"]}
-            moveParticlesOnHover={false}
-            particleHoverFactor={1}
-            alphaParticles={true}
-            particleBaseSize={100}
-            sizeRandomness={1}
-            cameraDistance={20}
-            disableRotation={false}
-          />
-        </div>
+        <ParticlesBackground />
+
         {/* Main Content - Above particles */}
         <div className="relative z-10 pointer-events-auto">
           {children}
