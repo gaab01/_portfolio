@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Particles from "@/components/Particles";
+import dynamic from "next/dynamic";
+
+const Particles = dynamic(() => import("@/components/Particles"), { ssr: false });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
